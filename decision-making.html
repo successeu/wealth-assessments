@@ -268,7 +268,7 @@
                     Decision_Q5_SayingNoDiscipline: document.querySelector('input[name="Decision_Q5_SayingNoDiscipline"]:checked')?.value || '',
                     Decision_Score: score
                 })
-            }).catch(err => console.log('Webhook submitted'));
+            }).then(() => console.log('Data sent to Zapier')).catch(err => console.log('Webhook error:', err));
 
             let interpretation = score <= 50 ? '<strong>Intuitive Decision-Maker</strong><br>You trust your instincts. Work on building more systematic evaluation frameworks.' : score <= 100 ? '<strong>Analytical Executor</strong><br>You balance analysis with execution. Develop stronger strategic prioritization.' : '<strong>Decision System Expert</strong><br>You have strong decision discipline. Use this as a competitive advantage.';
 
