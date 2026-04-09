@@ -83,7 +83,7 @@
                         <div class="step active" id="emailStep">
                             <h2 class="step-title">Let's Get Started</h2>
                             <div class="form-group">
-                                <label>What's your email address?</label>
+                                <label for="userEmail">What's your email address?</label>
                                 <input type="email" id="userEmail" placeholder="your@email.com" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 15px; margin-bottom: 20px;">
                                 <small style="color: #999;">We'll send your results here</small>
                             </div>
@@ -226,7 +226,7 @@
     </div>
 
     <script>
-        const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/3435365/u7irc5p/";
+        const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/3435365/u7s7hbq/";
         let currentStep = 0;
         const totalSteps = 5;
         let userEmail = '';
@@ -302,10 +302,15 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email, firstName: email.split('@')[0], lastName: '',
+                    Money_Q1_Question: 'How do you allocate revenue in your business?',
                     Money_Q1_RevenueAllocation: document.querySelector('input[name="Money_Q1_RevenueAllocation"]:checked')?.value || '',
+                    Money_Q2_Question: 'What percentage of profit do you retain?',
                     Money_Q2_ProfitRetention: document.querySelector('input[name="Money_Q2_ProfitRetention"]:checked')?.value || '',
+                    Money_Q3_Question: 'How do you approach tax planning?',
                     Money_Q3_TaxPlanning: document.querySelector('input[name="Money_Q3_TaxPlanning"]:checked')?.value || '',
+                    Money_Q4_Question: 'How do you manage reinvestment?',
                     Money_Q4_ReinvestmentStrategy: document.querySelector('input[name="Money_Q4_ReinvestmentStrategy"]:checked')?.value || '',
+                    Money_Q5_Question: "What's your biggest financial concern?",
                     Money_Q5_FinancialConcerns: document.querySelector('input[name="Money_Q5_FinancialConcerns"]:checked')?.value || '',
                     Money_Score: score
                 })
