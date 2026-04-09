@@ -636,9 +636,10 @@
 
             fetch(ZAPIER_WEBHOOK_URL, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payloadData)
-            }).catch(err => console.log('Webhook submitted (CORS expected)'));
+            }).then(() => console.log('Data sent to Zapier')).catch(err => console.log('Webhook error:', err));
 
             let interpretation = '';
             if (score <= 50) {
