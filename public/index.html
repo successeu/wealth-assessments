@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Architecture Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 50px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #cccccc;
+            line-height: 1.5;
+        }
+
+        .step {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 4px;
+            width: 100%;
+        }
+
+        .progress {
+            background: #ff8120;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #ff8120;
+            box-shadow: 0 0 0 3px rgba(255, 129, 32, 0.1);
+        }
+
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #ff8120;
+        }
+
+        .checkbox-item label,
+        .radio-item label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #ff8120;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e67019;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 129, 32, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .results {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 72px;
+            font-weight: 700;
+            color: #ff8120;
+            margin-bottom: 20px;
+        }
+
+        .results h2 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn-view-report {
+            background: #ff8120;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-view-report:hover {
+            background: #e67019;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 129, 32, 0.3);
+        }
+
+        .info-badge {
+            background: #fffaf5;
+            border-left: 4px solid #ff8120;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #ff8120;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="header">
+            <h1>Identity Architecture Assessment</h1>
+            <p>Discover your current positioning and mindset alignment with wealth ownership</p>
+        </div>
+
+        <!-- STEP 1: INTRO -->
+        <div class="step active" data-step="1">
+            <div class="step-title">Reveal Your Identity Score</div>
+            <div class="info-badge">
+                This 2-minute assessment reveals how your current identity, beliefs, and positioning align with wealth ownership. Your honest answers help us create a personalized identity architecture blueprint.
+            </div>
+            <p style="font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 30px;">
+                <strong>What you'll discover:</strong><br>
+                • Your current identity positioning (Practitioner → Transition → Owner)<br>
+                • Belief alignment with wealth creation<br>
+                • Mindset gaps holding you back<br>
+                • Your personalized identity blueprint
+            </p>
+            <div class="button-group">
+                <button class="btn-primary" onclick="nextStep()">Start Assessment</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: IDENTITY & POSITIONING -->
+        <div class="step" data-step="2">
+            <div class="step-title">Your Identity & Positioning</div>
+
+            <div class="form-group">
+                <label>How do you currently identify yourself?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="identity1" name="identity" value="10" />
+                        <label for="identity1">I'm a skilled practitioner/specialist in my field</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="identity2" name="identity" value="20" />
+                        <label for="identity2">I'm transitioning toward an owner/leader mindset</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="identity3" name="identity" value="30" />
+                        <label for="identity3">I'm an established business owner/entrepreneur</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>How often do you think about building long-term wealth?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="wealth_think1" name="wealth_think" value="8" />
+                        <label for="wealth_think1">Rarely or never</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="wealth_think2" name="wealth_think" value="16" />
+                        <label for="wealth_think2">Occasionally (a few times a month)</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="wealth_think3" name="wealth_think" value="25" />
+                        <label for="wealth_think3">Regularly (weekly or more)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Which belief resonates most with you?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="belief1" name="belief" value="10" />
+                        <label for="belief1">Wealth is luck or only for certain people</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="belief2" name="belief" value="20" />
+                        <label for="belief2">Wealth can be built through hard work</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="belief3" name="belief" value="30" />
+                        <label for="belief3">Wealth is a system and architecture that can be designed</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="prevStep()">Back</button>
+                <button class="btn-primary" onclick="nextStep()">Continue</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: BELIEF & ACTIONS -->
+        <div class="step" data-step="3">
+            <div class="step-title">Your Beliefs & Actions</div>
+
+            <div class="form-group">
+                <label>How do you view your primary income source?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="income_view1" name="income_view" value="10" />
+                        <label for="income_view1">It's my main financial stability</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="income_view2" name="income_view" value="20" />
+                        <label for="income_view2">It's a stepping stone to something bigger</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="income_view3" name="income_view" value="30" />
+                        <label for="income_view3">It's a platform to build wealth systems</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>What's your relationship with risk and growth?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="risk1" name="risk" value="8" />
+                        <label for="risk1">I prefer stability and minimal risk</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="risk2" name="risk" value="16" />
+                        <label for="risk2">I take calculated risks for growth</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="risk3" name="risk" value="25" />
+                        <label for="risk3">I actively seek and manage growth opportunities</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="prevStep()">Back</button>
+                <button class="btn-primary" onclick="nextStep()">Continue</button>
+            </div>
+        </div>
+
+        <!-- STEP 4: PERSONAL INFO -->
+        <div class="step" data-step="4">
+            <div class="step-title">Your Contact Information</div>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" id="firstName" required />
+            </div>
+
+            <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" id="lastName" required />
+            </div>
+
+            <div class="form-group">
+                <label>Email Address *</label>
+                <input type="email" id="email" required />
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="phone" />
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="prevStep()">Back</button>
+                <button class="btn-primary" id="submitBtn" onclick="calculateScore()">View My Score</button>
+            </div>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Processing your assessment...</p>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="results" id="results">
+            <div class="success-message" id="successMessage"></div>
+            <div class="score-display" id="scoreDisplay">0</div>
+            <h2 id="scoreTitle">Your Identity Architecture Score</h2>
+            <p id="scoreDescription"></p>
+            <a href="https://indentity-score-result.vercel.app/?score=SCORE_PLACEHOLDER" class="btn-view-report" id="viewReportBtn">View Your Full Report →</a>
+        </div>
+    </div>
+
+    <script>
+        // ===== ZAPIER WEBHOOK URL =====
+        const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/3435365/u7irc5p/";
+        // ===============================
+
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Get email from URL parameter
+        function getEmailFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('email') || '';
+        }
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function calculateScore() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            if (!firstName || !lastName || !email) {
+                showError('Please fill in all required fields.');
+                return;
+            }
+
+            // Validate email
+            if (!email.includes('@')) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+
+            // Calculate Identity Architecture Score
+            let score = 0;
+
+            const identityValue = parseInt(document.querySelector('input[name="identity"]:checked')?.value || 0);
+            const wealthThinkValue = parseInt(document.querySelector('input[name="wealth_think"]:checked')?.value || 0);
+            const beliefValue = parseInt(document.querySelector('input[name="belief"]:checked')?.value || 0);
+            const incomeViewValue = parseInt(document.querySelector('input[name="income_view"]:checked')?.value || 0);
+            const riskValue = parseInt(document.querySelector('input[name="risk"]:checked')?.value || 0);
+
+            score = identityValue + wealthThinkValue + beliefValue + incomeViewValue + riskValue;
+
+            // Show loading state
+            showLoadingState();
+
+            // Send data to Zapier
+            sendToZapier(firstName, lastName, email, phone, score);
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showLoadingState() {
+            document.querySelector('[data-step="4"]').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+
+        function sendToZapier(firstName, lastName, email, phone, score) {
+            // Prepare data payload
+            const payload = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                phone: phone,
+                assessmentType: 'Identity Architecture',
+                pillarScore: score,
+                answers: {
+                    identity: document.querySelector('input[name="identity"]:checked')?.value,
+                    wealthThink: document.querySelector('input[name="wealth_think"]:checked')?.value,
+                    belief: document.querySelector('input[name="belief"]:checked')?.value,
+                    incomeView: document.querySelector('input[name="income_view"]:checked')?.value,
+                    risk: document.querySelector('input[name="risk"]:checked')?.value
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            // Send to Zapier webhook
+            fetch(ZAPIER_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (response.ok) {
+                    showResults(score, firstName);
+                } else {
+                    throw new Error('Failed to submit assessment');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Still show results even if Zapier fails
+                showResults(score, firstName);
+            });
+        }
+
+        function showResults(score, firstName) {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('results').classList.add('active');
+            document.getElementById('scoreDisplay').textContent = score;
+
+            let title = '';
+            let description = '';
+
+            if (score < 40) {
+                title = 'Practitioner Identity';
+                description = 'You\'re currently operating with a strong execution identity. Your focus is on doing the work well. The opportunity ahead: shift from "doing" to "building systems." This is the bridge to ownership.';
+            } else if (score < 70) {
+                title = 'Transition Identity';
+                description = 'You\'re in the critical transition phase—one foot in execution, one foot in ownership. Your beliefs are evolving, but inconsistent actions still hold you back. The breakthrough: align your daily decisions with your owner identity.';
+            } else {
+                title = 'Owner Identity';
+                description = 'You\'re thinking and acting like an owner. Your identity is aligned with wealth building and systematic thinking. The next level: operationalize this identity into a complete Money Movement architecture.';
+            }
+
+            document.getElementById('scoreTitle').textContent = title;
+            document.getElementById('scoreDescription').textContent = description;
+            document.getElementById('successMessage').textContent = `✓ Your assessment has been recorded and synced to your account.`;
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('viewReportBtn').href = `https://indentity-score-result.vercel.app/?score=${score}`;
+
+            window.scrollTo(0, 0);
+        }
+
+        // Pre-fill email if passed in URL
+        window.addEventListener('load', function() {
+            const urlEmail = getEmailFromURL();
+            if (urlEmail) {
+                // You could pre-fill the email field if needed
+                // document.getElementById('email').value = urlEmail;
+            }
+        });
+
+        updateProgress();
+    </script>
+</body>
+</html>
