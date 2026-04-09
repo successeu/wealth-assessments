@@ -346,8 +346,18 @@
                 <!-- FORM -->
                 <div class="assessment-body">
                     <form id="assessmentForm">
+                        <!-- EMAIL CAPTURE -->
+                        <div class="step active" id="emailStep">
+                            <h2 class="step-title">Let's Get Started</h2>
+                            <div class="form-group">
+                                <label>What's your email address?</label>
+                                <input type="email" id="userEmail" placeholder="your@email.com" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 15px; margin-bottom: 20px;">
+                                <small style="color: #999;">We'll send your results here</small>
+                            </div>
+                        </div>
+
                         <!-- STEP 1 -->
-                        <div class="step active" id="step1">
+                        <div class="step" id="step1">
                             <h2 class="step-title">Question 1 of 5</h2>
                             <div class="form-group">
                                 <label>What best describes your current wealth position?</label>
@@ -541,8 +551,19 @@
     <script>
         const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/3435365/u7irc5p/";
 
-        let currentStep = 1;
+        let currentStep = 0;
         const totalSteps = 5;
+        let userEmail = '';
+
+        // Auto-populate email from URL parameter if present
+        function initializeEmail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlEmail = urlParams.get('email');
+            if (urlEmail) {
+                userEmail = urlEmail;
+                document.getElementById('userEmail').value = urlEmail;
+            }
+        }
 
         const scoreMap = {
             "Practitioner/Specialist": 10,
@@ -581,31 +602,52 @@
 
         function showStep(step) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + step).classList.add('active');
+
+            if (step === 0) {
+                document.getElementById('emailStep').classList.add('active');
+            } else {
+                document.getElementById('step' + step).classList.add('active');
+            }
 
             document.getElementById('prevBtn').style.display = step > 1 ? 'block' : 'none';
-            document.getElementById('nextBtn').textContent = step === totalSteps ? 'Submit' : 'Next →';
+            document.getElementById('nextBtn').textContent = step === 0 ? 'Start →' : step === totalSteps ? 'Submit' : 'Next →';
 
             updateProgress();
         }
 
         function changeStep(direction) {
-            if (direction === 1 && currentStep < totalSteps) {
-                const fieldName = ['Identity_Q1_WealthPosition', 'Identity_Q2_WealthThinking', 'Identity_Q3_WealthBeliefs', 'Identity_Q4_IncomeView'][currentStep - 1];
-                if (!document.querySelector(`input[name="${fieldName}"]:checked`)) {
-                    alert('Please select an option before continuing.');
-                    return;
+            if (direction === 1) {
+                // Email step validation
+                if (currentStep === 0) {
+                    const email = document.getElementById('userEmail').value.trim();
+                    if (!email || !email.includes('@')) {
+                        alert('Please enter a valid email address.');
+                        return;
+                    }
+                    userEmail = email;
+                    currentStep++;
+                    showStep(currentStep);
                 }
-                currentStep++;
-                showStep(currentStep);
-            } else if (direction === 1 && currentStep === totalSteps) {
-                const fieldName = 'Identity_Q5_RiskApproach';
-                if (!document.querySelector(`input[name="${fieldName}"]:checked`)) {
-                    alert('Please select an option before submitting.');
-                    return;
+                // Question steps validation
+                else if (currentStep < totalSteps) {
+                    const fieldName = ['Identity_Q1_WealthPosition', 'Identity_Q2_WealthThinking', 'Identity_Q3_WealthBeliefs', 'Identity_Q4_IncomeView'][currentStep - 1];
+                    if (!document.querySelector(`input[name="${fieldName}"]:checked`)) {
+                        alert('Please select an option before continuing.');
+                        return;
+                    }
+                    currentStep++;
+                    showStep(currentStep);
                 }
-                submitAssessment();
-            } else if (direction === -1 && currentStep > 1) {
+                // Final submission
+                else if (currentStep === totalSteps) {
+                    const fieldName = 'Identity_Q5_RiskApproach';
+                    if (!document.querySelector(`input[name="${fieldName}"]:checked`)) {
+                        alert('Please select an option before submitting.');
+                        return;
+                    }
+                    submitAssessment();
+                }
+            } else if (direction === -1 && currentStep > 0) {
                 currentStep--;
                 showStep(currentStep);
             }
@@ -619,8 +661,7 @@
             const q5Value = scoreMap5[document.querySelector('input[name="Identity_Q5_RiskApproach"]:checked')?.value] || 0;
             const score = q1Value + q2Value + q3Value + q4Value + q5Value;
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const email = urlParams.get('email') || 'not-provided@example.com';
+            const email = userEmail || 'not-provided@example.com';
 
             const payloadData = {
                 email: email,
@@ -664,7 +705,8 @@
             updateProgress();
         }
 
-        showStep(1);
+        initializeEmail();
+        showStep(0);
 
         // Attach event listeners after DOM is loaded
         document.getElementById('nextBtn').addEventListener('click', function() {
