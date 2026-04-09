@@ -268,7 +268,7 @@
                     Money_Q5_FinancialConcerns: document.querySelector('input[name="Money_Q5_FinancialConcerns"]:checked')?.value || '',
                     Money_Score: score
                 })
-            }).catch(err => console.log('Webhook submitted'));
+            }).then(() => console.log('Data sent to Zapier')).catch(err => console.log('Webhook error:', err));
 
             let interpretation = score <= 50 ? '<strong>Cash Flow Focused</strong><br>You prioritize managing current cash flow. Focus on profit optimization and retention.' : score <= 100 ? '<strong>Profit Building</strong><br>You\'re building profitability systematically. Work on strategic reinvestment.' : '<strong>Wealth Scaling</strong><br>You\'re scaling wealth strategically. Focus on multi-stream income.';
 
