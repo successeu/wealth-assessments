@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identity Architecture Assessment | Wealth Architecture</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;circle cx='50' cy='50' r='45' fill='%23ff8120'/&gt;&lt;path d='M25 52 L42 69 L75 36' stroke='white' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/&gt;&lt;/svg&gt;">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: #f9f9f9;
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .sr-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 129, 32, 0.3);
+        }
+
+        .sr-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sr-logo {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .sr-logo span {
+            color: #ff8120;
+        }
+
+        .sr-tagline {
+            font-size: 15px;
+            color: #666;
+        }
+
+        .sr-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sr-presenter {
+            font-size: 10px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .sr-presenter-photo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff8120;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+        }
+
+        .assessment-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .assessment-header {
+            background: linear-gradient(135deg, #ff8120 0%, #e06b10 100%);
+            padding: 50px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .assessment-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .assessment-header p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            background: #f0f0f0;
+            height: 4px;
+            width: 100%;
+        }
+
+        .progress {
+            background: #ff8120;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .assessment-body {
+            padding: 40px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            border-color: #ff8120;
+            background-color: rgba(255, 129, 32, 0.05);
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: #ff8120;
+        }
+
+        .radio-option input[type="radio"]:checked {
+            accent-color: #ff8120;
+        }
+
+        .radio-label {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #ff8120 0%, #e06b10 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-next:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 129, 32, 0.3);
+        }
+
+        .btn-prev {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        .btn-prev:hover {
+            background: #e0e0e0;
+        }
+
+        /* RESULTS */
+        .results {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff8120 0%, #e06b10 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .score-label {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .score-interpretation {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #ff8120;
+        }
+
+        .success-message {
+            color: #10b981;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* FOOTER */
+        .footer {
+            padding: 30px 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            line-height: 1.6;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 30px;
+        }
+
+        .footer strong {
+            color: #666;
+        }
+
+        /* DISCLAIMER */
+        .disclaimer {
+            max-width: 650px;
+            margin: 20px auto 0;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.5;
+            border: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- HEADER -->
+        <header class="sr-header">
+            <div class="sr-header-left">
+                <div class="sr-logo"><span>✓</span> Success Resources</div>
+                <div style="font-size: 15px; color: #999;">|</div>
+                <div class="sr-tagline">Your Learning Partner</div>
+            </div>
+            <div class="sr-header-right">
+                <div class="sr-presenter">Presented by June Yoon</div>
+                <img src="https://avatars.githubusercontent.com/u/49814981?v=4" alt="June Yoon" class="sr-presenter-photo">
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <div class="assessment-container">
+                <!-- PROGRESS BAR -->
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+
+                <!-- HEADER -->
+                <div class="assessment-header">
+                    <h1>Identity Architecture Assessment</h1>
+                    <p>Discover your wealth identity and position in your wealth journey</p>
+                </div>
+
+                <!-- FORM -->
+                <div class="assessment-body">
+                    <form id="assessmentForm">
+                        <!-- STEP 1 -->
+                        <div class="step active" id="step1">
+                            <h2 class="step-title">Question 1 of 5</h2>
+                            <div class="form-group">
+                                <label>What best describes your current wealth position?</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1_1" name="Identity_Q1_WealthPosition" value="Practitioner/Specialist">
+                                        <label for="q1_1" class="radio-label">
+                                            <strong>Practitioner/Specialist</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">I trade time for money in my current role</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1_2" name="Identity_Q1_WealthPosition" value="Transitioning to Owner">
+                                        <label for="q1_2" class="radio-label">
+                                            <strong>Transitioning to Owner</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Building my own business or transitioning out</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q1_3" name="Identity_Q1_WealthPosition" value="Established Owner">
+                                        <label for="q1_3" class="radio-label">
+                                            <strong>Established Owner</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">I run a successful business with multiple income streams</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2 -->
+                        <div class="step" id="step2">
+                            <h2 class="step-title">Question 2 of 5</h2>
+                            <div class="form-group">
+                                <label>How do you view wealth thinking?</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2_1" name="Identity_Q2_WealthThinking" value="Scarcity-focused">
+                                        <label for="q2_1" class="radio-label">
+                                            <strong>Scarcity-focused</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Wealth is limited, I need to protect what I have</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2_2" name="Identity_Q2_WealthThinking" value="Growth-oriented">
+                                        <label for="q2_2" class="radio-label">
+                                            <strong>Growth-oriented</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">I focus on building and growing my wealth</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q2_3" name="Identity_Q2_WealthThinking" value="Abundance-mindset">
+                                        <label for="q2_3" class="radio-label">
+                                            <strong>Abundance-mindset</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Wealth is infinite, I create value and opportunities</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3 -->
+                        <div class="step" id="step3">
+                            <h2 class="step-title">Question 3 of 5</h2>
+                            <div class="form-group">
+                                <label>What are your core wealth beliefs?</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3_1" name="Identity_Q3_WealthBeliefs" value="Hard-work-dependent">
+                                        <label for="q3_1" class="radio-label">
+                                            <strong>Hard-work-dependent</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Wealth comes from hard work and sacrifice</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3_2" name="Identity_Q3_WealthBeliefs" value="System-focused">
+                                        <label for="q3_2" class="radio-label">
+                                            <strong>System-focused</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Wealth comes from building systems and leverage</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q3_3" name="Identity_Q3_WealthBeliefs" value="Value-creation">
+                                        <label for="q3_3" class="radio-label">
+                                            <strong>Value-creation</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Wealth comes from solving problems and creating value</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4 -->
+                        <div class="step" id="step4">
+                            <h2 class="step-title">Question 4 of 5</h2>
+                            <div class="form-group">
+                                <label>How do you view income?</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4_1" name="Identity_Q4_IncomeView" value="Earned-only">
+                                        <label for="q4_1" class="radio-label">
+                                            <strong>Earned-only</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Rarely—I focus on earning income</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4_2" name="Identity_Q4_IncomeView" value="Multiple-streams">
+                                        <label for="q4_2" class="radio-label">
+                                            <strong>Multiple-streams</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Sometimes—I explore multiple income sources</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q4_3" name="Identity_Q4_IncomeView" value="Passive-focused">
+                                        <label for="q4_3" class="radio-label">
+                                            <strong>Passive-focused</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">Always—Passive income is my priority</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 5 -->
+                        <div class="step" id="step5">
+                            <h2 class="step-title">Question 5 of 5</h2>
+                            <div class="form-group">
+                                <label>What's your risk approach?</label>
+                                <div class="radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5_1" name="Identity_Q5_RiskApproach" value="Conservative">
+                                        <label for="q5_1" class="radio-label">
+                                            <strong>Conservative</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">I prefer safety and proven methods</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5_2" name="Identity_Q5_RiskApproach" value="Balanced">
+                                        <label for="q5_2" class="radio-label">
+                                            <strong>Balanced</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">I take calculated risks with good returns</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="q5_3" name="Identity_Q5_RiskApproach" value="Growth-focused">
+                                        <label for="q5_3" class="radio-label">
+                                            <strong>Growth-focused</strong>
+                                            <span style="font-size: 12px; color: #999; margin-top: 4px;">I'm comfortable with bold moves for big rewards</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RESULTS -->
+                        <div class="step" id="results">
+                            <div class="results">
+                                <div class="success-message">✓ Assessment Complete</div>
+                                <div class="score-circle" id="scoreDisplay">-</div>
+                                <div class="score-label">Your Identity Architecture Score</div>
+                                <div class="score-interpretation" id="interpretation"></div>
+                                <p style="font-size: 13px; color: #999; margin-top: 20px;">
+                                    Your detailed results have been saved. Check your email for next steps.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="button-group" id="buttonGroup">
+                            <button type="button" class="btn-prev" id="prevBtn" style="display:none;">← Back</button>
+                            <button type="button" class="btn-next" id="nextBtn">Next →</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- FOOTER -->
+                <div class="footer">
+                    <a href="https://www.millionairemindworld.com/sr" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">CONTACT US</a> |
+                    <a href="https://docs.google.com/document/d/1WWRyCrQ9jwLe8NR4A270KG3Ggyrk1D4b7Sxud95sIYo/edit?tab=t.0" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">PRIVACY POLICY</a> |
+                    <a href="https://docs.google.com/document/d/1KRQtEB5kVMEXTPBv_0IJW4sFa11wmoqM3FqyJNyKtOw/edit?tab=t.0#heading=h.nnnowla2e0uw" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">COOKIES POLICY</a><br>
+                    Copyright 2026 Success Resources © All Rights Reserved
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> This assessment is for educational purposes only and does not constitute financial, legal, or investment advice. Results are based on self-reported information and should not be used as the sole basis for financial decisions. Consult with qualified financial, legal, or investment professionals before making any decisions. Success Resources and June Yoon are not liable for any financial, legal, or other outcomes resulting from your use of this assessment.
+    </div>
+
+    <script>
+        const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/3435365/u7irc5p/";
+
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        const scoreMap = {
+            "Practitioner/Specialist": 10,
+            "Transitioning to Owner": 20,
+            "Established Owner": 30
+        };
+
+        const scoreMap2 = {
+            "Scarcity-focused": 10,
+            "Growth-oriented": 20,
+            "Abundance-mindset": 30
+        };
+
+        const scoreMap3 = {
+            "Hard-work-dependent": 10,
+            "System-focused": 20,
+            "Value-creation": 30
+        };
+
+        const scoreMap4 = {
+            "Earned-only": 10,
+            "Multiple-streams": 20,
+            "Passive-focused": 30
+        };
+
+        const scoreMap5 = {
+            "Conservative": 10,
+            "Balanced": 20,
+            "Growth-focused": 30
+        };
+
+        function updateProgress() {
+            const progress = Math.min((currentStep - 1) / totalSteps * 100, 100);
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+
+            document.getElementById('prevBtn').style.display = step > 1 ? 'block' : 'none';
+            document.getElementById('nextBtn').textContent = step === totalSteps ? 'Submit' : 'Next →';
+
+            updateProgress();
+        }
+
+        function changeStep(direction) {
+            if (direction === 1 && currentStep < totalSteps) {
+                const fieldName = ['Identity_Q1_WealthPosition', 'Identity_Q2_WealthThinking', 'Identity_Q3_WealthBeliefs', 'Identity_Q4_IncomeView'][currentStep - 1];
+                if (!document.querySelector(`input[name="${fieldName}"]:checked`)) {
+                    alert('Please select an option before continuing.');
+                    return;
+                }
+                currentStep++;
+                showStep(currentStep);
+            } else if (direction === 1 && currentStep === totalSteps) {
+                const fieldName = 'Identity_Q5_RiskApproach';
+                if (!document.querySelector(`input[name="${fieldName}"]:checked`)) {
+                    alert('Please select an option before submitting.');
+                    return;
+                }
+                submitAssessment();
+            } else if (direction === -1 && currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function submitAssessment() {
+            const q1Value = scoreMap[document.querySelector('input[name="Identity_Q1_WealthPosition"]:checked')?.value] || 0;
+            const q2Value = scoreMap2[document.querySelector('input[name="Identity_Q2_WealthThinking"]:checked')?.value] || 0;
+            const q3Value = scoreMap3[document.querySelector('input[name="Identity_Q3_WealthBeliefs"]:checked')?.value] || 0;
+            const q4Value = scoreMap4[document.querySelector('input[name="Identity_Q4_IncomeView"]:checked')?.value] || 0;
+            const q5Value = scoreMap5[document.querySelector('input[name="Identity_Q5_RiskApproach"]:checked')?.value] || 0;
+            const score = q1Value + q2Value + q3Value + q4Value + q5Value;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email') || 'not-provided@example.com';
+
+            const payloadData = {
+                email: email,
+                firstName: email.split('@')[0],
+                lastName: '',
+                Identity_Q1_WealthPosition: document.querySelector('input[name="Identity_Q1_WealthPosition"]:checked')?.value || '',
+                Identity_Q2_WealthThinking: document.querySelector('input[name="Identity_Q2_WealthThinking"]:checked')?.value || '',
+                Identity_Q3_WealthBeliefs: document.querySelector('input[name="Identity_Q3_WealthBeliefs"]:checked')?.value || '',
+                Identity_Q4_IncomeView: document.querySelector('input[name="Identity_Q4_IncomeView"]:checked')?.value || '',
+                Identity_Q5_RiskApproach: document.querySelector('input[name="Identity_Q5_RiskApproach"]:checked')?.value || '',
+                Identity_Score: score
+            };
+
+            fetch(ZAPIER_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payloadData)
+            }).catch(err => console.log('Webhook submitted (CORS expected)'));
+
+            let interpretation = '';
+            if (score <= 50) {
+                interpretation = '<strong>Practitioner Position</strong><br>You're building foundational wealth principles. Focus on expanding your thinking about wealth creation and exploring new income opportunities.';
+            } else if (score <= 100) {
+                interpretation = '<strong>Transitioning Owner</strong><br>You're developing owner-level thinking. Work on systematizing your approach and building passive income streams.';
+            } else {
+                interpretation = '<strong>Established Owner</strong><br>You have strong wealth architecture foundations. Focus on scaling and multiplying your impact and wealth.';
+            }
+
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('interpretation').innerHTML = interpretation;
+            document.getElementById('buttonGroup').style.display = 'none';
+
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step4').classList.remove('active');
+            document.getElementById('step5').classList.remove('active');
+            document.getElementById('results').classList.add('active');
+
+            updateProgress();
+        }
+
+        showStep(1);
+
+        // Attach event listeners after DOM is loaded
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            changeStep(1);
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', function() {
+            changeStep(-1);
+        });
+    </script>
+</body>
+</html>
