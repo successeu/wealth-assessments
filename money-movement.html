@@ -7,8 +7,8 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;circle cx='50' cy='50' r='45' fill='%23ff8120'/&gt;&lt;path d='M25 52 L42 69 L75 36' stroke='white' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/&gt;&lt;/svg&gt;">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: #f9f9f9; color: #1a1a1a; min-height: 100vh; padding: 20px; }
-        .page-wrapper { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100vh; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: #f9f9f9; color: #1a1a1a; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; }
+        .page-wrapper { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; flex: 1; width: 100%; }
         .sr-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 30px; border-bottom: 1px solid rgba(255, 129, 32, 0.3); }
         .sr-header-left { display: flex; align-items: center; gap: 15px; }
         .sr-logo { font-size: 15px; font-weight: 700; color: #1a1a1a; }
@@ -32,10 +32,10 @@
         .form-group { margin-bottom: 25px; }
         label { display: block; font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 12px; }
         .radio-group { display: flex; flex-direction: column; gap: 12px; }
-        .radio-option { display: flex; align-items: flex-start; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; }
-        .radio-option:hover { border-color: #ff8120; background-color: rgba(255, 129, 32, 0.05); }
-        .radio-option input[type="radio"] { margin-right: 12px; margin-top: 3px; cursor: pointer; accent-color: #ff8120; }
-        .radio-label { display: flex; flex-direction: column; cursor: pointer; font-size: 14px; color: #333; line-height: 1.4; }
+        .radio-option { display: flex; align-items: center; padding: 16px 18px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; min-height: 56px; }
+        .radio-option:hover { border-color: #ff8120; background-color: rgba(255, 129, 32, 0.08); }
+        .radio-option input[type="radio"] { width: 24px; height: 24px; min-width: 24px; min-height: 24px; margin-right: 16px; cursor: pointer; accent-color: #ff8120; flex-shrink: 0; }
+        .radio-label { display: flex; flex-direction: column; cursor: pointer; font-size: 14px; color: #333; line-height: 1.5; width: 100%; }
         .button-group { display: flex; gap: 12px; margin-top: 30px; justify-content: space-between; }
         button { padding: 12px 30px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
         .btn-next { background: linear-gradient(135deg, #ff8120 0%, #e06b10 100%); color: white; flex: 1; }
@@ -47,9 +47,31 @@
         .score-label { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 15px; }
         .score-interpretation { font-size: 15px; color: #333; line-height: 1.6; margin-bottom: 20px; padding: 20px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #ff8120; }
         .success-message { color: #10b981; font-weight: 600; margin-bottom: 20px; font-size: 16px; }
-        .footer { padding: 30px 40px; text-align: center; font-size: 12px; color: #999; line-height: 1.6; border-top: 1px solid #e0e0e0; margin-top: 30px; }
-        .footer strong { color: #666; }
-        .disclaimer { max-width: 650px; margin: 20px auto 0; padding: 20px; background: #fff; border-radius: 12px; font-size: 11px; color: #999; line-height: 1.5; border: 1px solid #e0e0e0; }
+
+        /* DISCLAIMER + FOOTER WRAPPER */
+        .disclaimer-footer-wrapper { max-width: 650px; margin: 20px auto 0; width: 100%; padding: 0 20px; box-sizing: border-box; }
+        .disclaimer { padding: 20px; background: #fff; border-radius: 12px 12px 0 0; font-size: 11px; color: #999; line-height: 1.5; border: 1px solid #e0e0e0; margin-bottom: 0; }
+        .footer { padding: 20px; text-align: center; font-size: 12px; color: #999; line-height: 1.6; border: 1px solid #e0e0e0; background: #fff; border-radius: 0 0 12px 12px; margin-bottom: 0; border-top: none; }
+        .footer-links { margin-bottom: 8px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .footer-links a { color: #666 !important; text-decoration: none !important; font-weight: 500 !important; }
+        .footer-links a:hover { color: #ff8120 !important; }
+        .footer-copyright { font-size: 11px; color: #999; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .sr-header { padding: 12px 0; margin-bottom: 16px; }
+            .sr-tagline { display: none; }
+            .assessment-body { padding: 20px; }
+            .disclaimer-footer-wrapper { padding: 0 12px; margin: 16px auto 0; }
+            .disclaimer { padding: 14px 12px; font-size: 10px; border-radius: 8px 8px 0 0; }
+            .footer { padding: 14px 12px; font-size: 11px; border-radius: 0 0 8px 8px; border-top: none; }
+            .footer-links { margin-bottom: 6px; gap: 4px; font-size: 10px; }
+            .footer-copyright { font-size: 10px; margin-top: 6px; padding-top: 6px; }
+            .radio-option { padding: 14px 12px; min-height: 56px; }
+            .radio-option input[type="radio"] { width: 22px; height: 22px; min-width: 22px; min-height: 22px; margin-right: 12px; }
+            .radio-label { font-size: 13px; line-height: 1.4; }
+        }
     </style>
 </head>
 <body>
@@ -62,7 +84,7 @@
             </div>
             <div class="sr-header-right">
                 <div class="sr-presenter">Presented by June Yoon</div>
-                <img src="https://avatars.githubusercontent.com/u/49814981?v=4" alt="June Yoon" class="sr-presenter-photo">
+                <img src="https://i.imgur.com/PMWQ0NS.png" alt="June Yoon" class="sr-presenter-photo">
             </div>
         </header>
 
@@ -92,19 +114,19 @@
                         <div class="step" id="step1">
                             <h2 class="step-title">Question 1 of 5</h2>
                             <div class="form-group">
-                                <label>How do you allocate revenue in your business?</label>
+                                <label>How do you currently manage your personal spending and expenses?</label>
                                 <div class="radio-group">
                                     <div class="radio-option">
-                                        <input type="radio" id="q1_1" name="Money_Q1_RevenueAllocation" value="Spend-all-revenue">
-                                        <label for="q1_1" class="radio-label"><strong>Spend-all-revenue</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Most revenue goes to expenses and payroll</span></label>
+                                        <input type="radio" id="q1_1" name="Money_Q1_SpendingHabits" value="No-budget-reactive">
+                                        <label for="q1_1" class="radio-label"><strong>No-budget-reactive</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I spend as needed without tracking or planning</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q1_2" name="Money_Q1_RevenueAllocation" value="Profit-mindful">
-                                        <label for="q1_2" class="radio-label"><strong>Profit-mindful</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I set aside profit from revenue intentionally</span></label>
+                                        <input type="radio" id="q1_2" name="Money_Q1_SpendingHabits" value="Basic-awareness">
+                                        <label for="q1_2" class="radio-label"><strong>Basic-awareness</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I track spending occasionally to stay aware</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q1_3" name="Money_Q1_RevenueAllocation" value="Strategic-allocation">
-                                        <label for="q1_3" class="radio-label"><strong>Strategic-allocation</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Profit-first system with strategic reinvestment</span></label>
+                                        <input type="radio" id="q1_3" name="Money_Q1_SpendingHabits" value="Disciplined-budget">
+                                        <label for="q1_3" class="radio-label"><strong>Disciplined-budget</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I have a detailed budget and stick to it consistently</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -113,19 +135,19 @@
                         <div class="step" id="step2">
                             <h2 class="step-title">Question 2 of 5</h2>
                             <div class="form-group">
-                                <label>What percentage of profit do you retain?</label>
+                                <label>What percentage of your income do you save or invest?</label>
                                 <div class="radio-group">
                                     <div class="radio-option">
-                                        <input type="radio" id="q2_1" name="Money_Q2_ProfitRetention" value="Below-10%">
-                                        <label for="q2_1" class="radio-label"><strong>Below 10%</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Most profits are spent or reinvested immediately</span></label>
+                                        <input type="radio" id="q2_1" name="Money_Q2_SavingsRate" value="Below-5%">
+                                        <label for="q2_1" class="radio-label"><strong>Below 5%</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I save very little - most income goes to living expenses</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q2_2" name="Money_Q2_ProfitRetention" value="10-25%">
-                                        <label for="q2_2" class="radio-label"><strong>10-25%</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I save some profit but reinvest most</span></label>
+                                        <input type="radio" id="q2_2" name="Money_Q2_SavingsRate" value="5-20%">
+                                        <label for="q2_2" class="radio-label"><strong>5-20%</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I save a moderate amount for future needs</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q2_3" name="Money_Q2_ProfitRetention" value="Above-25%">
-                                        <label for="q2_3" class="radio-label"><strong>Above 25%</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I retain significant profit for growth</span></label>
+                                        <input type="radio" id="q2_3" name="Money_Q2_SavingsRate" value="Above-20%">
+                                        <label for="q2_3" class="radio-label"><strong>Above 20%</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I consistently save and invest significant portion of income</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -134,19 +156,19 @@
                         <div class="step" id="step3">
                             <h2 class="step-title">Question 3 of 5</h2>
                             <div class="form-group">
-                                <label>How do you approach tax planning?</label>
+                                <label>How do you approach personal investment and wealth building?</label>
                                 <div class="radio-group">
                                     <div class="radio-option">
-                                        <input type="radio" id="q3_1" name="Money_Q3_TaxPlanning" value="Reactive-filing">
-                                        <label for="q3_1" class="radio-label"><strong>Reactive-filing</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">File taxes when due, minimal planning</span></label>
+                                        <input type="radio" id="q3_1" name="Money_Q3_InvestmentApproach" value="No-investing">
+                                        <label for="q3_1" class="radio-label"><strong>No-investing</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I don't invest - money stays in cash or checking account</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q3_2" name="Money_Q3_TaxPlanning" value="Quarterly-review">
-                                        <label for="q3_2" class="radio-label"><strong>Quarterly-review</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Monitor taxes quarterly with professional help</span></label>
+                                        <input type="radio" id="q3_2" name="Money_Q3_InvestmentApproach" value="Basic-investing">
+                                        <label for="q3_2" class="radio-label"><strong>Basic-investing</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I invest in basic vehicles like savings accounts or stocks</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q3_3" name="Money_Q3_TaxPlanning" value="Strategic-planning">
-                                        <label for="q3_3" class="radio-label"><strong>Strategic-planning</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Year-round tax optimization strategy</span></label>
+                                        <input type="radio" id="q3_3" name="Money_Q3_InvestmentApproach" value="Strategic-diversified">
+                                        <label for="q3_3" class="radio-label"><strong>Strategic-diversified</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I have a diversified portfolio with clear wealth-building strategy</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -155,19 +177,19 @@
                         <div class="step" id="step4">
                             <h2 class="step-title">Question 4 of 5</h2>
                             <div class="form-group">
-                                <label>How do you manage reinvestment?</label>
+                                <label>How would you describe your money mindset and beliefs about earning?</label>
                                 <div class="radio-group">
                                     <div class="radio-option">
-                                        <input type="radio" id="q4_1" name="Money_Q4_ReinvestmentStrategy" value="Minimal-reinvestment">
-                                        <label for="q4_1" class="radio-label"><strong>Minimal-reinvestment</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Small incremental improvements only</span></label>
+                                        <input type="radio" id="q4_1" name="Money_Q4_MoneyMindset" value="Scarcity-limiting">
+                                        <label for="q4_1" class="radio-label"><strong>Scarcity-limiting</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Money is limited - I struggle with earning more and keeping it</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q4_2" name="Money_Q4_ReinvestmentStrategy" value="Growth-focused">
-                                        <label for="q4_2" class="radio-label"><strong>Growth-focused</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Reinvest for business expansion</span></label>
+                                        <input type="radio" id="q4_2" name="Money_Q4_MoneyMindset" value="Growth-capable">
+                                        <label for="q4_2" class="radio-label"><strong>Growth-capable</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I believe I can earn more and improve my financial situation</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q4_3" name="Money_Q4_ReinvestmentStrategy" value="Multi-stream-building">
-                                        <label for="q4_3" class="radio-label"><strong>Multi-stream-building</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Build new income streams with profits</span></label>
+                                        <input type="radio" id="q4_3" name="Money_Q4_MoneyMindset" value="Abundance-creating">
+                                        <label for="q4_3" class="radio-label"><strong>Abundance-creating</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">I believe in unlimited earning potential and actively create wealth</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -176,19 +198,19 @@
                         <div class="step" id="step5">
                             <h2 class="step-title">Question 5 of 5</h2>
                             <div class="form-group">
-                                <label>What's your biggest financial concern?</label>
+                                <label>What is your biggest financial challenge right now?</label>
                                 <div class="radio-group">
                                     <div class="radio-option">
-                                        <input type="radio" id="q5_1" name="Money_Q5_FinancialConcerns" value="Cash-flow-control">
-                                        <label for="q5_1" class="radio-label"><strong>Cash-flow-control</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Managing day-to-day cash flow</span></label>
+                                        <input type="radio" id="q5_1" name="Money_Q5_FinancialChallenge" value="Living-paycheck">
+                                        <label for="q5_1" class="radio-label"><strong>Living-paycheck</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Living paycheck-to-paycheck with little savings or emergency fund</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q5_2" name="Money_Q5_FinancialConcerns" value="Profit-optimization">
-                                        <label for="q5_2" class="radio-label"><strong>Profit-optimization</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Maximizing profit margins</span></label>
+                                        <input type="radio" id="q5_2" name="Money_Q5_FinancialChallenge" value="Saving-investing">
+                                        <label for="q5_2" class="radio-label"><strong>Saving-investing</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Building savings and learning how to invest effectively</span></label>
                                     </div>
                                     <div class="radio-option">
-                                        <input type="radio" id="q5_3" name="Money_Q5_FinancialConcerns" value="Wealth-acceleration">
-                                        <label for="q5_3" class="radio-label"><strong>Wealth-acceleration</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Growing wealth faster than business income</span></label>
+                                        <input type="radio" id="q5_3" name="Money_Q5_FinancialChallenge" value="Wealth-optimization">
+                                        <label for="q5_3" class="radio-label"><strong>Wealth-optimization</strong><span style="font-size: 12px; color: #999; margin-top: 4px;">Optimizing wealth growth and building multiple income streams</span></label>
                                     </div>
                                 </div>
                             </div>
@@ -197,10 +219,38 @@
                         <div class="step" id="results">
                             <div class="results">
                                 <div class="success-message">✓ Assessment Complete</div>
+                                
+                                <!-- MAIN SCORE -->
                                 <div class="score-circle" id="scoreDisplay">-</div>
                                 <div class="score-label">Your Money Movement Score</div>
                                 <div class="score-interpretation" id="interpretation"></div>
-                                <p style="font-size: 13px; color: #999; margin-top: 20px;">Your detailed results have been saved. Check your email for next steps.</p>
+                                
+                                <!-- SCORE BREAKDOWN -->
+                                <div style="margin-top: 40px; padding: 24px; background: #f9f9f9; border-radius: 12px; border-left: 4px solid #ff8120;">
+                                    <h3 style="font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px;">Your Money Management Profile</h3>
+                                    
+                                    <div id="scoreBreakdown" style="display: grid; gap: 14px;">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                                
+                                <!-- KEY INSIGHTS -->
+                                <div style="margin-top: 24px; padding: 24px; background: #fffaf5; border-radius: 12px; border: 1px solid rgba(255, 129, 32, 0.2);">
+                                    <h3 style="font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px;">💰 Key Insights for You</h3>
+                                    <div id="keyInsights" style="display: grid; gap: 12px; font-size: 14px; color: #444; line-height: 1.6;">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                                
+                                <!-- CALL TO ACTION -->
+                                <div style="margin-top: 32px; padding: 20px; background: linear-gradient(135deg, #ff8120 0%, #e06b10 100%); border-radius: 12px; color: white; text-align: center;">
+                                    <p style="font-size: 14px; margin-bottom: 12px;">Ready to optimize your money movement?</p>
+                                    <p style="font-size: 13px; color: rgba(255,255,255,0.9);">Check your email for your personalized profit optimization plan + next steps</p>
+                                </div>
+                                
+                                <p style="font-size: 12px; color: #999; margin-top: 24px; text-align: center;">
+                                    This assessment is part of the Millionaire Mind Framework developed by June Yoon.
+                                </p>
                             </div>
                         </div>
 
@@ -210,19 +260,27 @@
                         </div>
                     </form>
                 </div>
-
-                <div class="footer">
-                    <a href="https://www.millionairemindworld.com/sr" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">CONTACT US</a> |
-                    <a href="https://docs.google.com/document/d/1WWRyCrQ9jwLe8NR4A270KG3Ggyrk1D4b7Sxud95sIYo/edit?tab=t.0" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">PRIVACY POLICY</a> |
-                    <a href="https://docs.google.com/document/d/1KRQtEB5kVMEXTPBv_0IJW4sFa11wmoqM3FqyJNyKtOw/edit?tab=t.0#heading=h.nnnowla2e0uw" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">COOKIES POLICY</a><br>
-                    Copyright 2026 Success Resources © All Rights Reserved
-                </div>
             </div>
         </div>
     </div>
 
-    <div class="disclaimer">
-        <strong>Disclaimer:</strong> This assessment is for educational purposes only and does not constitute financial, legal, or investment advice. Results are based on self-reported information and should not be used as the sole basis for financial decisions. Consult with qualified financial, legal, or investment professionals before making any decisions. Success Resources and June Yoon are not liable for any financial, legal, or other outcomes resulting from your use of this assessment.
+    <div class="disclaimer-footer-wrapper">
+        <!-- DISCLAIMER SECTION - AT TOP -->
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This assessment is for educational purposes only and does not constitute financial, legal, or investment advice. Results are based on self-reported information and should not be used as the sole basis for financial decisions. Consult with qualified financial, legal, or investment professionals before making any decisions. Success Resources and June Yoon are not liable for any financial, legal, or other outcomes resulting from your use of this assessment.
+        </div>
+
+        <!-- FOOTER SECTION - AT BOTTOM -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://www.millionairemindworld.com/sr" target="_blank">CONTACT US</a> |
+                <a href="https://docs.google.com/document/d/1WWRyCrQ9jwLe8NR4A270KG3Ggyrk1D4b7Sxud95sIYo/edit?tab=t.0" target="_blank">PRIVACY POLICY</a> |
+                <a href="https://docs.google.com/document/d/1KRQtEB5kVMEXTPBv_0IJW4sFa11wmoqM3FqyJNyKtOw/edit?tab=t.0#heading=h.nnnowla2e0uw" target="_blank">COOKIES POLICY</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 Success Resources © All Rights Reserved
+            </div>
+        </div>
     </div>
 
     <script>
@@ -231,7 +289,6 @@
         const totalSteps = 5;
         let userEmail = '';
 
-        // Auto-populate email from URL parameter if present
         function initializeEmail() {
             const urlParams = new URLSearchParams(window.location.search);
             const urlEmail = urlParams.get('email');
@@ -241,11 +298,11 @@
             }
         }
 
-        const scoreMap = { "Spend-all-revenue": 10, "Profit-mindful": 20, "Strategic-allocation": 30 };
-        const scoreMap2 = { "Below-10%": 10, "10-25%": 20, "Above-25%": 30 };
-        const scoreMap3 = { "Reactive-filing": 10, "Quarterly-review": 20, "Strategic-planning": 30 };
-        const scoreMap4 = { "Minimal-reinvestment": 10, "Growth-focused": 20, "Multi-stream-building": 30 };
-        const scoreMap5 = { "Cash-flow-control": 10, "Profit-optimization": 20, "Wealth-acceleration": 30 };
+        const scoreMap = { "No-budget-reactive": 10, "Basic-awareness": 20, "Disciplined-budget": 30 };
+        const scoreMap2 = { "Below-5%": 10, "5-20%": 20, "Above-20%": 30 };
+        const scoreMap3 = { "No-investing": 10, "Basic-investing": 20, "Strategic-diversified": 30 };
+        const scoreMap4 = { "Scarcity-limiting": 10, "Growth-capable": 20, "Abundance-creating": 30 };
+        const scoreMap5 = { "Living-paycheck": 10, "Saving-investing": 20, "Wealth-optimization": 30 };
 
         function updateProgress() { document.getElementById('progressBar').style.width = Math.min((currentStep - 1) / totalSteps * 100, 100) + '%'; }
         function showStep(step) {
@@ -261,7 +318,6 @@
         }
         function changeStep(direction) {
             if (direction === 1) {
-                // Email step validation
                 if (currentStep === 0) {
                     const email = document.getElementById('userEmail').value.trim();
                     if (!email || !email.includes('@')) {
@@ -272,29 +328,34 @@
                     currentStep++;
                     showStep(currentStep);
                 }
-                // Question steps validation
                 else if (currentStep < totalSteps) {
-                    const fieldName = ['Money_Q1_RevenueAllocation', 'Money_Q2_ProfitRetention', 'Money_Q3_TaxPlanning', 'Money_Q4_ReinvestmentStrategy'][currentStep - 1];
+                    const fieldName = ['Money_Q1_SpendingHabits', 'Money_Q2_SavingsRate', 'Money_Q3_InvestmentApproach', 'Money_Q4_MoneyMindset'][currentStep - 1];
                     if (!document.querySelector(`input[name="${fieldName}"]:checked`)) { alert('Please select an option before continuing.'); return; }
                     currentStep++;
                     showStep(currentStep);
                 }
-                // Final submission
                 else if (currentStep === totalSteps) {
-                    if (!document.querySelector('input[name="Money_Q5_FinancialConcerns"]:checked')) { alert('Please select an option before submitting.'); return; }
+                    if (!document.querySelector('input[name="Money_Q5_FinancialChallenge"]:checked')) { alert('Please select an option before submitting.'); return; }
                     submitAssessment();
                 }
             } else if (direction === -1 && currentStep > 0) { currentStep--; showStep(currentStep); }
         }
         function submitAssessment() {
-            const q1 = scoreMap[document.querySelector('input[name="Money_Q1_RevenueAllocation"]:checked')?.value] || 0;
-            const q2 = scoreMap2[document.querySelector('input[name="Money_Q2_ProfitRetention"]:checked')?.value] || 0;
-            const q3 = scoreMap3[document.querySelector('input[name="Money_Q3_TaxPlanning"]:checked')?.value] || 0;
-            const q4 = scoreMap4[document.querySelector('input[name="Money_Q4_ReinvestmentStrategy"]:checked')?.value] || 0;
-            const q5 = scoreMap5[document.querySelector('input[name="Money_Q5_FinancialConcerns"]:checked')?.value] || 0;
-            const score = q1 + q2 + q3 + q4 + q5;
+            const q1Value = scoreMap[document.querySelector('input[name="Money_Q1_SpendingHabits"]:checked')?.value] || 0;
+            const q2Value = scoreMap2[document.querySelector('input[name="Money_Q2_SavingsRate"]:checked')?.value] || 0;
+            const q3Value = scoreMap3[document.querySelector('input[name="Money_Q3_InvestmentApproach"]:checked')?.value] || 0;
+            const q4Value = scoreMap4[document.querySelector('input[name="Money_Q4_MoneyMindset"]:checked')?.value] || 0;
+            const q5Value = scoreMap5[document.querySelector('input[name="Money_Q5_FinancialChallenge"]:checked')?.value] || 0;
+            const score = q1Value + q2Value + q3Value + q4Value + q5Value;
 
             const email = userEmail || 'not-provided@example.com';
+
+            // Capture user answers
+            const q1Answer = document.querySelector('input[name="Money_Q1_SpendingHabits"]:checked')?.value || '';
+            const q2Answer = document.querySelector('input[name="Money_Q2_SavingsRate"]:checked')?.value || '';
+            const q3Answer = document.querySelector('input[name="Money_Q3_InvestmentApproach"]:checked')?.value || '';
+            const q4Answer = document.querySelector('input[name="Money_Q4_MoneyMindset"]:checked')?.value || '';
+            const q5Answer = document.querySelector('input[name="Money_Q5_FinancialChallenge"]:checked')?.value || '';
 
             fetch(ZAPIER_WEBHOOK_URL, {
                 method: 'POST',
@@ -302,22 +363,107 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email, firstName: email.split('@')[0], lastName: '',
-                    Money_Q1_Question: 'How do you allocate revenue in your business?',
-                    Money_Q1_RevenueAllocation: document.querySelector('input[name="Money_Q1_RevenueAllocation"]:checked')?.value || '',
-                    Money_Q2_Question: 'What percentage of profit do you retain?',
-                    Money_Q2_ProfitRetention: document.querySelector('input[name="Money_Q2_ProfitRetention"]:checked')?.value || '',
-                    Money_Q3_Question: 'How do you approach tax planning?',
-                    Money_Q3_TaxPlanning: document.querySelector('input[name="Money_Q3_TaxPlanning"]:checked')?.value || '',
-                    Money_Q4_Question: 'How do you manage reinvestment?',
-                    Money_Q4_ReinvestmentStrategy: document.querySelector('input[name="Money_Q4_ReinvestmentStrategy"]:checked')?.value || '',
-                    Money_Q5_Question: "What's your biggest financial concern?",
-                    Money_Q5_FinancialConcerns: document.querySelector('input[name="Money_Q5_FinancialConcerns"]:checked')?.value || '',
+                    Money_Q1_Question: 'How do you currently manage your personal spending and expenses?',
+                    Money_Q1_SpendingHabits: q1Answer,
+                    Money_Q2_Question: 'What percentage of your income do you save or invest?',
+                    Money_Q2_SavingsRate: q2Answer,
+                    Money_Q3_Question: 'How do you approach personal investment and wealth building?',
+                    Money_Q3_InvestmentApproach: q3Answer,
+                    Money_Q4_Question: 'How would you describe your money mindset and beliefs about earning?',
+                    Money_Q4_MoneyMindset: q4Answer,
+                    Money_Q5_Question: 'What is your biggest financial challenge right now?',
+                    Money_Q5_FinancialChallenge: q5Answer,
                     Money_Score: score
                 })
             }).then(() => console.log('Data sent to Zapier')).catch(err => console.log('Webhook error:', err));
 
-            let interpretation = score <= 50 ? '<strong>Cash Flow Focused</strong><br>You prioritize managing current cash flow. Focus on profit optimization and retention.' : score <= 100 ? '<strong>Profit Building</strong><br>You\'re building profitability systematically. Work on strategic reinvestment.' : '<strong>Wealth Scaling</strong><br>You\'re scaling wealth strategically. Focus on multi-stream income.';
+            // == SCORE INTERPRETATION ==
+            let interpretation = '';
+            let category = '';
+            if (score <= 50) {
+                interpretation = '<strong>Financial Survivor</strong><br>You\'re focused on meeting immediate needs. Start building a foundation with basic budgeting and savings.';
+                category = 'survivor';
+            } else if (score <= 100) {
+                interpretation = '<strong>Financial Builder</strong><br>You\'re growing your wealth systematically. Continue building discipline and diversifying investments.';
+                category = 'builder';
+            } else {
+                interpretation = '<strong>Wealth Creator</strong><br>You manage money strategically with abundance mindset. Focus on optimizing and scaling.';
+                category = 'creator';
+            }
 
+            // == SCORE BREAKDOWN ==
+            const breakdown = [
+                { label: 'Spending Management', value: q1Value, max: 30, question: q1Answer },
+                { label: 'Savings Rate', value: q2Value, max: 30, question: q2Answer },
+                { label: 'Investment Strategy', value: q3Value, max: 30, question: q3Answer },
+                { label: 'Money Mindset', value: q4Value, max: 30, question: q4Answer },
+                { label: 'Financial Health', value: q5Value, max: 30, question: q5Answer }
+            ];
+
+            let breakdownHTML = '';
+            breakdown.forEach(item => {
+                const percentage = Math.round((item.value / item.max) * 100);
+                const barColor = percentage >= 67 ? '#22c55e' : percentage >= 34 ? '#ff8120' : '#e0e0e0';
+                breakdownHTML += `
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-weight: 600; color: #1a1a1a;">${item.label}</span>
+                            <span style="color: #ff8120; font-weight: 700;">${item.value}/${item.max}</span>
+                        </div>
+                        <div style="height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
+                            <div style="height: 100%; background: ${barColor}; width: ${percentage}%;"></div>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 4px;">${item.question}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('scoreBreakdown').innerHTML = breakdownHTML;
+
+            // == KEY INSIGHTS ==
+            let insightsHTML = '';
+            if (q1Answer === 'No-budget-reactive') {
+                insightsHTML += '<div>📊 <strong>You spend without a plan.</strong> Start tracking expenses for 30 days to see where money actually goes—this is the foundation of financial control.</div>';
+            } else if (q1Answer === 'Basic-awareness') {
+                insightsHTML += '<div>📊 <strong>You track spending casually.</strong> Formalize this into a monthly budget to allocate money intentionally toward your goals.</div>';
+            } else {
+                insightsHTML += '<div>📊 <strong>You have spending discipline.</strong> This is rare—use it as your competitive advantage and help others build this habit.</div>';
+            }
+
+            if (q2Answer === 'Below-5%') {
+                insightsHTML += '<div>🏦 <strong>You save very little.</strong> Start with just 5% of income—automate it so you don\'t see it. Build an emergency fund first (3-6 months expenses).</div>';
+            } else if (q2Answer === '5-20%') {
+                insightsHTML += '<div>🏦 <strong>You\'re building savings momentum.</strong> You have the habit—now increase to 20%+ and diversify where you save (emergency fund, investments, goals).</div>';
+            } else {
+                insightsHTML += '<div>🏦 <strong>You save aggressively.</strong> You\'re ahead of most people—make sure this is working toward specific goals and growing your net worth.</div>';
+            }
+
+            if (q3Answer === 'No-investing') {
+                insightsHTML += '<div>💰 <strong>You don\'t invest yet.</strong> Start with low-cost index funds or retirement accounts (401k/IRA)—even small amounts compound into wealth over time.</div>';
+            } else if (q3Answer === 'Basic-investing') {
+                insightsHTML += '<div>💰 <strong>You\'re beginning to invest.</strong> Build on this by learning asset allocation and creating a diversified portfolio aligned with your risk tolerance.</div>';
+            } else {
+                insightsHTML += '<div>💰 <strong>You have diversified investments.</strong> You\'re building serious wealth—continue rebalancing and stay disciplined through market cycles.</div>';
+            }
+
+            if (q4Answer === 'Scarcity-limiting') {
+                insightsHTML += '<div>🧠 <strong>You have limiting money beliefs.</strong> Your mindset is your biggest limiting factor—start reprogramming with daily affirmations about earning and abundance.</div>';
+            } else if (q4Answer === 'Growth-capable') {
+                insightsHTML += '<div>🧠 <strong>You believe in growth.</strong> This is powerful—channel it into skill development or income-boosting opportunities that match your belief.</div>';
+            } else {
+                insightsHTML += '<div>🧠 <strong>You embody abundance.</strong> You have the right mindset—now align your actions (investments, side hustle, skill-building) with your potential.</div>';
+            }
+
+            if (q5Answer === 'Living-paycheck') {
+                insightsHTML += '<div>⚡ <strong>Priority: Build an emergency fund.</strong> Get 1 month of expenses saved first, then tackle bigger wealth goals. One unexpected expense shouldn\'t derail you.</div>';
+            } else if (q5Answer === 'Saving-investing') {
+                insightsHTML += '<div>⚡ <strong>Priority: Automate your savings.</strong> Set up automatic transfers to savings and investment accounts so building wealth happens without willpower.</div>';
+            } else {
+                insightsHTML += '<div>⚡ <strong>Priority: Scale strategically.</strong> You\'ve mastered the basics—now focus on increasing income, building additional streams, and optimizing tax efficiency.</div>';
+            }
+
+            document.getElementById('keyInsights').innerHTML = insightsHTML;
+
+            // Display results
             document.getElementById('scoreDisplay').textContent = score;
             document.getElementById('interpretation').innerHTML = interpretation;
             document.getElementById('buttonGroup').style.display = 'none';
@@ -328,14 +474,17 @@
 
         initializeEmail();
         showStep(0);
+        document.getElementById('nextBtn').addEventListener('click', function() { changeStep(1); });
+        document.getElementById('prevBtn').addEventListener('click', function() { changeStep(-1); });
 
-        // Attach event listeners after DOM is loaded
-        document.getElementById('nextBtn').addEventListener('click', function() {
-            changeStep(1);
-        });
-
-        document.getElementById('prevBtn').addEventListener('click', function() {
-            changeStep(-1);
+        // Make entire radio option box clickable
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'INPUT') {
+                    const input = this.querySelector('input[type="radio"]');
+                    if (input) input.checked = true;
+                }
+            });
         });
     </script>
 </body>
