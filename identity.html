@@ -515,11 +515,45 @@
                         <div class="step" id="results">
                             <div class="results">
                                 <div class="success-message">✓ Assessment Complete</div>
+                                
+                                <!-- MAIN SCORE -->
                                 <div class="score-circle" id="scoreDisplay">-</div>
                                 <div class="score-label">Your Identity Architecture Score</div>
                                 <div class="score-interpretation" id="interpretation"></div>
-                                <p style="font-size: 13px; color: #999; margin-top: 20px;">
-                                    Your detailed results have been saved. Check your email for next steps.
+                                
+                                <!-- SCORE BREAKDOWN (Assets) -->
+                                <div style="margin-top: 40px; padding: 24px; background: #f9f9f9; border-radius: 12px; border-left: 4px solid #ff8120;">
+                                    <h3 style="font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px;">Your Wealth Architecture Breakdown</h3>
+                                    
+                                    <div id="scoreBreakdown" style="display: grid; gap: 14px;">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                                
+                                <!-- KEY INSIGHTS -->
+                                <div style="margin-top: 24px; padding: 24px; background: #fffaf5; border-radius: 12px; border: 1px solid rgba(255, 129, 32, 0.2);">
+                                    <h3 style="font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px;">🎯 Key Insights for You</h3>
+                                    <div id="keyInsights" style="display: grid; gap: 12px; font-size: 14px; color: #444; line-height: 1.6;">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                                
+                                <!-- PERSONALIZED RECOMMENDATIONS -->
+                                <div style="margin-top: 24px; padding: 24px; background: white; border-radius: 12px; border: 2px solid #ff8120;">
+                                    <h3 style="font-size: 16px; font-weight: 700; color: #ff8120; margin-bottom: 16px;">💡 Your Next Steps (Next 90 Days)</h3>
+                                    <div id="recommendations" style="display: grid; gap: 14px; font-size: 14px; color: #333;">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                                
+                                <!-- CALL TO ACTION -->
+                                <div style="margin-top: 32px; padding: 20px; background: linear-gradient(135deg, #ff8120 0%, #e06b10 100%); border-radius: 12px; color: white; text-align: center;">
+                                    <p style="font-size: 14px; margin-bottom: 12px;">Ready to build your wealth architecture?</p>
+                                    <p style="font-size: 13px; color: rgba(255,255,255,0.9);">Check your email for your personalized wealth blueprint PDF + next steps</p>
+                                </div>
+                                
+                                <p style="font-size: 12px; color: #999; margin-top: 24px; text-align: center;">
+                                    This assessment is part of the Millionaire Mind Framework developed by June Yoon.
                                 </p>
                             </div>
                         </div>
@@ -663,15 +697,22 @@
 
             const email = userEmail || 'not-provided@example.com';
 
+            // Capture user answers for insights
+            const q1Answer = document.querySelector('input[name="Identity_Q1_WealthPosition"]:checked')?.value || '';
+            const q2Answer = document.querySelector('input[name="Identity_Q2_WealthThinking"]:checked')?.value || '';
+            const q3Answer = document.querySelector('input[name="Identity_Q3_WealthBeliefs"]:checked')?.value || '';
+            const q4Answer = document.querySelector('input[name="Identity_Q4_IncomeView"]:checked')?.value || '';
+            const q5Answer = document.querySelector('input[name="Identity_Q5_RiskApproach"]:checked')?.value || '';
+
             const payloadData = {
                 email: email,
                 firstName: email.split('@')[0],
                 lastName: '',
-                Identity_Q1_WealthPosition: document.querySelector('input[name="Identity_Q1_WealthPosition"]:checked')?.value || '',
-                Identity_Q2_WealthThinking: document.querySelector('input[name="Identity_Q2_WealthThinking"]:checked')?.value || '',
-                Identity_Q3_WealthBeliefs: document.querySelector('input[name="Identity_Q3_WealthBeliefs"]:checked')?.value || '',
-                Identity_Q4_IncomeView: document.querySelector('input[name="Identity_Q4_IncomeView"]:checked')?.value || '',
-                Identity_Q5_RiskApproach: document.querySelector('input[name="Identity_Q5_RiskApproach"]:checked')?.value || '',
+                Identity_Q1_WealthPosition: q1Answer,
+                Identity_Q2_WealthThinking: q2Answer,
+                Identity_Q3_WealthBeliefs: q3Answer,
+                Identity_Q4_IncomeView: q4Answer,
+                Identity_Q5_RiskApproach: q5Answer,
                 Identity_Score: score
             };
 
@@ -682,15 +723,136 @@
                 body: JSON.stringify(payloadData)
             }).then(() => console.log('Data sent to Zapier')).catch(err => console.log('Webhook error:', err));
 
+            // == SCORE INTERPRETATION ==
             let interpretation = '';
+            let category = '';
             if (score <= 50) {
                 interpretation = '<strong>Practitioner Position</strong><br>You\'re building foundational wealth principles. Focus on expanding your thinking about wealth creation and exploring new income opportunities.';
+                category = 'practitioner';
             } else if (score <= 100) {
                 interpretation = '<strong>Transitioning Owner</strong><br>You\'re developing owner-level thinking. Work on systematizing your approach and building passive income streams.';
+                category = 'transitioning';
             } else {
                 interpretation = '<strong>Established Owner</strong><br>You have strong wealth architecture foundations. Focus on scaling and multiplying your impact and wealth.';
+                category = 'established';
             }
 
+            // == SCORE BREAKDOWN ==
+            const breakdown = [
+                { label: 'Wealth Position', value: q1Value, max: 30, question: q1Answer },
+                { label: 'Wealth Thinking', value: q2Value, max: 30, question: q2Answer },
+                { label: 'Wealth Beliefs', value: q3Value, max: 30, question: q3Answer },
+                { label: 'Income Structure', value: q4Value, max: 30, question: q4Answer },
+                { label: 'Risk Approach', value: q5Value, max: 30, question: q5Answer }
+            ];
+
+            let breakdownHTML = '';
+            breakdown.forEach(item => {
+                const percentage = Math.round((item.value / item.max) * 100);
+                const barColor = percentage >= 67 ? '#22c55e' : percentage >= 34 ? '#ff8120' : '#e0e0e0';
+                breakdownHTML += `
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-weight: 600; color: #1a1a1a;">${item.label}</span>
+                            <span style="color: #ff8120; font-weight: 700;">${item.value}/${item.max}</span>
+                        </div>
+                        <div style="height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden;">
+                            <div style="height: 100%; background: ${barColor}; width: ${percentage}%;"></div>
+                        </div>
+                        <div style="font-size: 12px; color: #999; margin-top: 4px;">${item.question}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('scoreBreakdown').innerHTML = breakdownHTML;
+
+            // == KEY INSIGHTS ==
+            let insightsHTML = '';
+            if (q1Answer === 'Practitioner/Specialist') {
+                insightsHTML += '<div>📌 <strong>You\'re trading time for money.</strong> The first opportunity is to explore ways to add leverage to your income (systems, delegation, or multiple income streams).</div>';
+            } else if (q1Answer === 'Transitioning to Owner') {
+                insightsHTML += '<div>📌 <strong>You\'re building toward business ownership.</strong> Focus on documenting and systematizing your processes to reduce your personal dependency.</div>';
+            } else {
+                insightsHTML += '<div>📌 <strong>You have owner-level thinking.</strong> Your next phase is scaling and multiplying impact beyond your current capacity.</div>';
+            }
+
+            if (q2Answer === 'Scarcity-focused') {
+                insightsHTML += '<div>💰 <strong>Scarcity mindset limits wealth growth.</strong> Work on identifying abundance opportunities in your environment and shifting your perspective on money flow.</div>';
+            } else if (q2Answer === 'Growth-oriented') {
+                insightsHTML += '<div>💰 <strong>You\'re growth-minded.</strong> Channel this into systematic wealth-building strategies that compound over time.</div>';
+            } else {
+                insightsHTML += '<div>💰 <strong>You embody abundance thinking.</strong> This is your superpower—leverage it to create multiple wealth streams and teach others.</div>';
+            }
+
+            if (q3Answer === 'Hard-work-dependent') {
+                insightsHTML += '<div>⚙️ <strong>You believe effort = reward.</strong> This is valuable, but also explore leverage through systems, partnerships, and passive mechanisms.</div>';
+            } else if (q3Answer === 'System-focused') {
+                insightsHTML += '<div>⚙️ <strong>You recognize system power.</strong> Invest time in building repeatable, scalable systems for wealth generation.</div>';
+            } else {
+                insightsHTML += '<div>⚙️ <strong>You understand value creation deeply.</strong> Focus on creating intellectual property, licensing, or ideas that generate wealth without active work.</div>';
+            }
+
+            if (q4Answer === 'Earned-only') {
+                insightsHTML += '<div>📊 <strong>All income is earned income.</strong> This is a foundation, but explore business income, investment income, and passive streams to accelerate wealth.</div>';
+            } else if (q4Answer === 'Multiple-streams') {
+                insightsHTML += '<div>📊 <strong>You have diversified income.</strong> Optimize each stream and look for ways to make them more passive or scalable.</div>';
+            } else {
+                insightsHTML += '<div>📊 <strong>Passive income is your focus.</strong> This is the highest wealth-building strategy—continue building systems that generate revenue while you sleep.</div>';
+            }
+
+            document.getElementById('keyInsights').innerHTML = insightsHTML;
+
+            // == PERSONALIZED RECOMMENDATIONS ==
+            let recommendationsHTML = '';
+            if (category === 'practitioner') {
+                recommendationsHTML = `
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 1-2: Assess Your Current Position</strong><br>
+                        <span style="font-size: 13px;">Create a personal balance sheet: List all income sources, assets, liabilities. Identify where you're leaving money on the table.</span>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 3-4: Shift Your Thinking</strong><br>
+                        <span style="font-size: 13px;">Read one resource on owner-level thinking. Identify 3 ways you could add leverage to your current work (delegation, automation, or new skills).</span>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 5-12: Build Your First System</strong><br>
+                        <span style="font-size: 13px;">Pick one repeatable task and document the process. Train someone else or build an automated system to handle it without you.</span>
+                    </div>
+                `;
+            } else if (category === 'transitioning') {
+                recommendationsHTML = `
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 1-2: Systemize Your Core</strong><br>
+                        <span style="font-size: 13px;">Document your top 5 business processes. Identify which ones are essential (you must do) vs. delegable.</span>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 3-4: Test Your First Passive Stream</strong><br>
+                        <span style="font-size: 13px;">Launch one passive income experiment: digital product, affiliate partnership, or licensing idea. Goal: Generate $100-500 passively in 30 days.</span>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 5-12: Scale & Delegate</strong><br>
+                        <span style="font-size: 13px;">Hire or contract support for one high-value task. Invest the freed time into business growth or passive income development.</span>
+                    </div>
+                `;
+            } else {
+                recommendationsHTML = `
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 1-2: Audit Your Passive Streams</strong><br>
+                        <span style="font-size: 13px;">Review all current passive income sources. Calculate: revenue, growth rate, and effort required. Identify the 80/20.</span>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 3-4: Build Your Next Stream</strong><br>
+                        <span style="font-size: 13px;">Launch 1 new passive income stream (course, membership, SaaS, investments). Set a 90-day revenue target.</span>
+                    </div>
+                    <div style="padding: 12px; background: rgba(255, 129, 32, 0.1); border-radius: 6px;">
+                        <strong>🎯 Week 5-12: Multiply & Teach</strong><br>
+                        <span style="font-size: 13px;">Document your wealth architecture journey and share it. Teaching multiplies learning and creates new opportunities.</span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('recommendations').innerHTML = recommendationsHTML;
+
+            // Display results
             document.getElementById('scoreDisplay').textContent = score;
             document.getElementById('interpretation').innerHTML = interpretation;
             document.getElementById('buttonGroup').style.display = 'none';
