@@ -169,24 +169,30 @@
 
         .radio-option {
             display: flex;
-            align-items: flex-start;
-            padding: 12px;
+            align-items: center;
+            padding: 16px 18px;
             border: 2px solid #e0e0e0;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            min-height: 56px;
         }
 
         .radio-option:hover {
             border-color: #ff8120;
-            background-color: rgba(255, 129, 32, 0.05);
+            background-color: rgba(255, 129, 32, 0.08);
         }
 
         .radio-option input[type="radio"] {
-            margin-right: 12px;
-            margin-top: 3px;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            margin-right: 16px;
+            margin-top: 0;
             cursor: pointer;
             accent-color: #ff8120;
+            flex-shrink: 0;
         }
 
         .radio-option input[type="radio"]:checked {
@@ -199,7 +205,28 @@
             cursor: pointer;
             font-size: 14px;
             color: #333;
-            line-height: 1.4;
+            line-height: 1.5;
+            width: 100%;
+        }
+
+        /* Mobile optimization - larger touch targets */
+        @media (max-width: 768px) {
+            .radio-option {
+                padding: 18px 16px;
+                min-height: 64px;
+                gap: 12px;
+            }
+            
+            .radio-option input[type="radio"] {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                min-height: 28px;
+            }
+            
+            .radio-label {
+                font-size: 15px;
+            }
         }
 
         .button-group {
@@ -869,6 +896,19 @@
 
         initializeEmail();
         showStep(0);
+
+        // Make entire radio option box clickable
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                // Prevent double-triggering if clicking the input directly
+                if (e.target.tagName !== 'INPUT') {
+                    const input = this.querySelector('input[type="radio"]');
+                    if (input) {
+                        input.checked = true;
+                    }
+                }
+            });
+        });
 
         // Attach event listeners after DOM is loaded
         document.getElementById('nextBtn').addEventListener('click', function() {
