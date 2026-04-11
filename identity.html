@@ -18,6 +18,8 @@
             color: #1a1a1a;
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
         .page-wrapper {
@@ -25,7 +27,8 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            flex: 1;
+            width: 100%;
         }
 
         /* HEADER */
@@ -82,6 +85,8 @@
         /* MAIN CONTENT */
         .main-content {
             flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .assessment-container {
@@ -91,6 +96,19 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .assessment-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer {
+            margin-top: auto;
         }
 
         .assessment-header {
@@ -125,7 +143,157 @@
         }
 
         .assessment-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             padding: 40px;
+        }
+
+        /* === MOBILE OPTIMIZATION === */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .sr-header {
+                padding: 12px 0;
+                margin-bottom: 16px;
+            }
+
+            .sr-header-left {
+                gap: 10px;
+            }
+
+            .sr-logo {
+                font-size: 13px;
+            }
+
+            .sr-tagline {
+                font-size: 12px;
+                display: none;
+            }
+
+            .sr-presenter {
+                font-size: 9px;
+            }
+
+            .sr-presenter-photo {
+                width: 32px;
+                height: 32px;
+            }
+
+            .assessment-container {
+                border-radius: 8px;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            }
+
+            .assessment-header {
+                padding: 28px 20px;
+            }
+
+            .assessment-header h1 {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+
+            .assessment-header p {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .assessment-body {
+                padding: 20px;
+            }
+
+            .step-title {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            label {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .radio-group {
+                gap: 10px;
+            }
+
+            .radio-option {
+                padding: 14px 12px;
+                min-height: 56px;
+                border-radius: 6px;
+            }
+
+            .radio-option input[type="radio"] {
+                width: 22px;
+                height: 22px;
+                min-width: 22px;
+                min-height: 22px;
+                margin-right: 12px;
+            }
+
+            .radio-label {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .radio-label strong {
+                display: block;
+                margin-bottom: 3px;
+            }
+
+            .button-group {
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            button {
+                padding: 11px 20px;
+                font-size: 14px;
+            }
+
+            .disclaimer-footer-wrapper {
+                padding: 0 12px;
+                margin: 16px auto 0;
+            }
+
+            .disclaimer {
+                padding: 14px 12px;
+                font-size: 10px;
+                border-radius: 8px 8px 0 0;
+                border-bottom: none;
+            }
+
+            .footer {
+                padding: 14px 12px;
+                font-size: 11px;
+                border-radius: 0 0 8px 8px;
+                border-top: none;
+            }
+
+            .footer-links {
+                margin-bottom: 6px;
+                display: flex;
+                justify-content: center;
+                gap: 4px;
+                flex-wrap: wrap;
+                font-size: 10px;
+            }
+
+            .footer-links a {
+                font-size: 10px;
+            }
+
+            .footer-copyright {
+                font-size: 10px;
+                margin-top: 6px;
+                padding-top: 6px;
+            }
         }
 
         .step {
@@ -209,23 +377,34 @@
             width: 100%;
         }
 
-        /* Mobile optimization - larger touch targets */
+        /* Mobile optimization - compact and readable */
         @media (max-width: 768px) {
             .radio-option {
-                padding: 18px 16px;
-                min-height: 64px;
+                padding: 14px 12px;
+                min-height: 56px;
                 gap: 12px;
             }
             
             .radio-option input[type="radio"] {
-                width: 28px;
-                height: 28px;
-                min-width: 28px;
-                min-height: 28px;
+                width: 22px;
+                height: 22px;
+                min-width: 22px;
+                min-height: 22px;
             }
             
             .radio-label {
-                font-size: 15px;
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .radio-label strong {
+                display: block;
+                margin-bottom: 3px;
+                font-size: 13px;
+            }
+
+            .radio-label span {
+                font-size: 11px !important;
             }
         }
 
@@ -312,25 +491,82 @@
             font-size: 16px;
         }
 
-        /* FOOTER */
+        /* DISCLAIMER - AT TOP */
+        .disclaimer {
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px 12px 0 0;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.5;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 0;
+        }
+
+        /* FOOTER - AT BOTTOM */
         .footer {
-            padding: 30px 40px;
+            padding: 20px;
             text-align: center;
             font-size: 12px;
             color: #999;
             line-height: 1.6;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 30px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 0;
+            border-top: none;
         }
 
-        .footer strong {
-            color: #666;
+        .footer-links {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #666 !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+        }
+
+        .footer-links a:hover {
+            color: #ff8120 !important;
+        }
+
+        .footer-copyright {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* Combined disclaimer + footer styling */
+        .disclaimer-footer-wrapper .disclaimer {
+            border-radius: 12px 12px 0 0;
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .disclaimer-footer-wrapper .footer {
+            border-radius: 0 0 12px 12px;
+            border-top: none;
+            margin-top: 0;
+        }
+
+        /* DISCLAIMER + FOOTER WRAPPER - Sticky bottom section */
+        .disclaimer-footer-wrapper {
+            max-width: 650px;
+            margin: 20px auto 0;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
         /* DISCLAIMER */
         .disclaimer {
-            max-width: 650px;
-            margin: 20px auto 0;
             padding: 20px;
             background: #fff;
             border-radius: 12px;
@@ -338,6 +574,7 @@
             color: #999;
             line-height: 1.5;
             border: 1px solid #e0e0e0;
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -594,19 +831,29 @@
                 </div>
 
                 <!-- FOOTER -->
-                <div class="footer">
-                    <a href="https://www.millionairemindworld.com/sr" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">CONTACT US</a> |
-                    <a href="https://docs.google.com/document/d/1WWRyCrQ9jwLe8NR4A270KG3Ggyrk1D4b7Sxud95sIYo/edit?tab=t.0" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">PRIVACY POLICY</a> |
-                    <a href="https://docs.google.com/document/d/1KRQtEB5kVMEXTPBv_0IJW4sFa11wmoqM3FqyJNyKtOw/edit?tab=t.0#heading=h.nnnowla2e0uw" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">COOKIES POLICY</a><br>
-                    Copyright 2026 Success Resources © All Rights Reserved
-                </div>
+                <!-- (Moved inside disclaimer below) -->
             </div>
         </div>
     </div>
 
-    <!-- DISCLAIMER -->
-    <div class="disclaimer">
-        <strong>Disclaimer:</strong> This assessment is for educational purposes only and does not constitute financial, legal, or investment advice. Results are based on self-reported information and should not be used as the sole basis for financial decisions. Consult with qualified financial, legal, or investment professionals before making any decisions. Success Resources and June Yoon are not liable for any financial, legal, or other outcomes resulting from your use of this assessment.
+    <!-- DISCLAIMER + FOOTER COMBINED -->
+    <div class="disclaimer-footer-wrapper">
+        <!-- DISCLAIMER SECTION - AT TOP -->
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This assessment is for educational purposes only and does not constitute financial, legal, or investment advice. Results are based on self-reported information and should not be used as the sole basis for financial decisions. Consult with qualified financial, legal, or investment professionals before making any decisions. Success Resources and June Yoon are not liable for any financial, legal, or other outcomes resulting from your use of this assessment.
+        </div>
+
+        <!-- FOOTER SECTION - AT BOTTOM -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://www.millionairemindworld.com/sr" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">CONTACT US</a> |
+                <a href="https://docs.google.com/document/d/1WWRyCrQ9jwLe8NR4A270KG3Ggyrk1D4b7Sxud95sIYo/edit?tab=t.0" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">PRIVACY POLICY</a> |
+                <a href="https://docs.google.com/document/d/1KRQtEB5kVMEXTPBv_0IJW4sFa11wmoqM3FqyJNyKtOw/edit?tab=t.0#heading=h.nnnowla2e0uw" target="_blank" style="color: #666; text-decoration: none; font-weight: 500;">COOKIES POLICY</a>
+            </div>
+            <div class="footer-copyright">
+                Copyright 2026 Success Resources © All Rights Reserved
+            </div>
+        </div>
     </div>
 
     <script>
